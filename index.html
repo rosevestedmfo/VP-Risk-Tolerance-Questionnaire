@@ -467,6 +467,12 @@
 document.addEventListener("DOMContentLoaded", function () {
   const FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzhnnlv/";
 
+  function generateCaseId() {
+    const now = Date.now().toString(36);
+    const rand = Math.random().toString(36).substring(2, 8);
+    return `RTQ-${now}-${rand}`;
+  }
+
   function getRiskProfile(score) {
     if (score <= 25) return "Conservative";
     if (score <= 45) return "Moderate Conservative";
@@ -545,6 +551,148 @@ document.addEventListener("DOMContentLoaded", function () {
     profileDisplay.textContent = scores.riskProfile;
   }
 
+  // Label helpers for full Q&A text
+  function getA1Label(v) {
+    switch (v) {
+      case 0: return "Less than 2 years (0 points)";
+      case 2: return "2–5 years (2 points)";
+      case 4: return "5–10 years (4 points)";
+      case 6: return "10–20 years (6 points)";
+      case 8: return "More than 20 years (8 points)";
+      default: return "";
+    }
+  }
+
+  function getA2Label(v) {
+    switch (v) {
+      case 0: return "More than 50% (0 points)";
+      case 1: return "25–50% (1 point)";
+      case 3: return "10–25% (3 points)";
+      case 5: return "5–10% (5 points)";
+      case 7: return "Less than 5% (7 points)";
+      default: return "";
+    }
+  }
+
+  function getA3Label(v) {
+    switch (v) {
+      case 0: return "Very unstable/unemployed (0 points)";
+      case 2: return "Unstable (commission, contract work) (2 points)";
+      case 3: return "Somewhat stable (3 points)";
+      case 5: return "Stable salary (5 points)";
+      case 7: return "Very stable (tenured, government) + other income sources (7 points)";
+      default: return "";
+    }
+  }
+
+  function getA4Label(v) {
+    switch (v) {
+      case 0: return "More than 25% (0 points)";
+      case 1: return "15–25% (1 point)";
+      case 3: return "10–15% (3 points)";
+      case 5: return "5–10% (5 points)";
+      case 8: return "Less than 5% or debt-free (8 points)";
+      default: return "";
+    }
+  }
+
+  function getB1Label(v) {
+    switch (v) {
+      case 0: return "Sold everything immediately to avoid further losses (0 points)";
+      case 3: return "Sold some to reduce my risk exposure (3 points)";
+      case 7: return "Held on and did nothing (7 points)";
+      case 10: return "Bought more while prices were low (10 points)";
+      default: return "";
+    }
+  }
+
+  function getB2Label(v) {
+    switch (v) {
+      case 2: return "$100,000–120,000 (I want to preserve capital) (2 points)";
+      case 4: return "$120,000–160,000 (Steady growth is important) (4 points)";
+      case 6: return "$160,000–220,000 (I want good growth) (6 points)";
+      case 8: return "$220,000–300,000 (I want high growth) (8 points)";
+      case 10: return "More than $300,000 (Maximum growth is my priority) (10 points)";
+      default: return "";
+    }
+  }
+
+  function getB3Label(v) {
+    switch (v) {
+      case 0: return "Any loss would concern me (0 points)";
+      case 2: return "5% loss (2 points)";
+      case 4: return "10% loss (4 points)";
+      case 6: return "15% loss (6 points)";
+      case 8: return "20% loss (8 points)";
+      case 10: return "More than 25% loss (10 points)";
+      default: return "";
+    }
+  }
+
+  function getB4Label(v) {
+    switch (v) {
+      case 0: return "I would be devastated and sell everything (0 points)";
+      case 2: return "I would be very concerned and sell most investments (2 points)";
+      case 5: return "I would be worried but probably hold on (5 points)";
+      case 8: return "I would stay calm and stick to my plan (8 points)";
+      case 10: return "I would see it as a buying opportunity (10 points)";
+      default: return "";
+    }
+  }
+
+  function getC1Label(v) {
+    switch (v) {
+      case 0: return "No experience (0 points)";
+      case 1: return "Limited experience (savings accounts, CDs) (1 point)";
+      case 3: return "Some experience (mutual funds, basic stocks) (3 points)";
+      case 5: return "Considerable experience (diverse portfolio, 5+ years) (5 points)";
+      default: return "";
+    }
+  }
+
+  function getC2Label(v) {
+    switch (v) {
+      case 0: return "I don't understand it (0 points)";
+      case 2: return "I have a basic understanding (2 points)";
+      case 4: return "I understand it fairly well (4 points)";
+      case 5: return "I understand it very well (5 points)";
+      default: return "";
+    }
+  }
+
+  function getC3Label(v) {
+    switch (v) {
+      case 0: return "No, and it would devastate me (0 points)";
+      case 2: return "No, but I think I could handle it (2 points)";
+      case 1: return "Yes, and I panicked and sold (1 point)";
+      case 4: return "Yes, but I held on and recovered (4 points)";
+      case 5: return "Yes, and I bought more at lower prices (5 points)";
+      default: return "";
+    }
+  }
+
+  function getD1Label(v) {
+    switch (v) {
+      case 0: return "I need guarantees and certainty (0 points)";
+      case 2: return "I prefer low risk with modest returns (2 points)";
+      case 4: return "I want balanced growth with some risk (4 points)";
+      case 6: return "I'm comfortable with higher risk for better returns (6 points)";
+      case 7: return "I seek maximum returns regardless of risk (7 points)";
+      default: return "";
+    }
+  }
+
+  function getD2Label(v) {
+    switch (v) {
+      case 0: return "I get very anxious and want to make changes (0 points)";
+      case 2: return "I worry but usually don't act (2 points)";
+      case 4: return "I pay attention but stay calm (4 points)";
+      case 6: return "I largely ignore short-term market news (6 points)";
+      case 8: return "I look for opportunities during volatile times (8 points)";
+      default: return "";
+    }
+  }
+
   const form = document.getElementById("riskForm");
   if (!form) {
     console.log("riskForm not found");
@@ -569,6 +717,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const scores = calculateScores(form);
     updateDisplay(form, scores);
 
+    // Capture individual answers for full Q&A
+    const answers = {
+      A1: getRadioValue(form, "A1"),
+      A2: getRadioValue(form, "A2"),
+      A3: getRadioValue(form, "A3"),
+      A4: getRadioValue(form, "A4"),
+      B1: getRadioValue(form, "B1"),
+      B2: getRadioValue(form, "B2"),
+      B3: getRadioValue(form, "B3"),
+      B4: getRadioValue(form, "B4"),
+      C1: getRadioValue(form, "C1"),
+      C2: getRadioValue(form, "C2"),
+      C3: getRadioValue(form, "C3"),
+      D1: getRadioValue(form, "D1"),
+      D2: getRadioValue(form, "D2")
+    };
+
     const {
       sectionA,
       sectionB,
@@ -580,60 +745,81 @@ document.addEventListener("DOMContentLoaded", function () {
       riskProfile
     } = scores;
 
+    const caseId = generateCaseId();
+
     const subject =
       `New Risk Questionnaire – ${form.primaryClientName.value || "Client"} ` +
-      `(${finalScoreClamped} – ${riskProfile})`;
+      `(${finalScoreClamped} – ${riskProfile}) [Case ID: ${caseId}]`;
 
     const body =
-      `Risk Tolerance Questionnaire Submission
+      `Risk Tolerance Questionnaire Submission (Client Copy)\n\n` +
+      `Case ID: ${caseId}\n` +
+      `Primary Client: ${form.primaryClientName.value || ""}\n` +
+      `Co-Client/Spouse: ${form.coClientName.value || ""}\n` +
+      `Date: ${form.date.value || ""}\n` +
+      `Advisor: ${form.advisorName.value || ""}\n\n` +
 
-` +
-      `Primary Client: ${form.primaryClientName.value || ""}
-` +
-      `Co-Client/Spouse: ${form.coClientName.value || ""}
-` +
-      `Date: ${form.date.value || ""}
-` +
-      `Advisor: ${form.advisorName.value || ""}
+      `Final Score: ${finalScoreClamped}\n` +
+      `Risk Profile: ${riskProfile}\n` +
+      `Raw Total (before adjustments): ${rawTotal}\n` +
+      `Adjustments: ${adjustments}\n\n` +
 
-` +
+      `Section Scores:\n` +
+      `  Section A (Financial Capacity): ${sectionA}\n` +
+      `  Section B (Risk Tolerance): ${sectionB}\n` +
+      `  Section C (Experience & Knowledge): ${sectionC}\n` +
+      `  Section D (Behavioral Factors): ${sectionD}\n\n` +
 
-      `Final Score: ${finalScoreClamped}
-` +
-      `Risk Profile: ${riskProfile}
-` +
-      `Raw Total (before adjustments): ${rawTotal}
-` +
-      `Adjustments: ${adjustments}
+      `--- Client Questionnaire – Full Copy ---\n\n` +
 
-` +
+      `A1. What is your investment time horizon for the majority of these funds?\n` +
+      `Answer: ${getA1Label(answers.A1)}\n\n` +
 
-      `Section Scores:
-` +
-      `  Section A (Financial Capacity): ${sectionA}
-` +
-      `  Section B (Risk Tolerance): ${sectionB}
-` +
-      `  Section C (Experience & Knowledge): ${sectionC}
-` +
-      `  Section D (Behavioral Factors): ${sectionD}
+      `A2. What percentage of your portfolio do you expect to need for liquidity in the next 5 years?\n` +
+      `Answer: ${getA2Label(answers.A2)}\n\n` +
 
-` +
+      `A3. How stable is your primary income source?\n` +
+      `Answer: ${getA3Label(answers.A3)}\n\n` +
 
-      `Adjustment Flags:
-` +
-      `  Age over 65: ${form.ageOver65 && form.ageOver65.checked ? "Yes" : "No"}
-` +
-      `  Approaching retirement (within 5 years): ${form.approachingRetirement && form.approachingRetirement.checked ? "Yes" : "No"}
-` +
-      `  Large inheritance/windfall: ${form.inheritanceWindfall && form.inheritanceWindfall.checked ? "Yes" : "No"}
-` +
-      `  Single income household: ${form.singleIncome && form.singleIncome.checked ? "Yes" : "No"}
-` +
-      `  Pension/guaranteed income: ${form.pensionIncome && form.pensionIncome.checked ? "Yes" : "No"}
-`;
+      `A4. What is your current debt-to-income ratio (excluding mortgage)?\n` +
+      `Answer: ${getA4Label(answers.A4)}\n\n` +
+
+      `B1. During the 2008 financial crisis, the stock market lost approximately 37%. If you had owned a diversified stock portfolio then, what would you have done?\n` +
+      `Answer: ${getB1Label(answers.B1)}\n\n` +
+
+      `B2. You invest $100,000 today. What would you expect this investment to be worth in 10 years?\n` +
+      `Answer: ${getB2Label(answers.B2)}\n\n` +
+
+      `B3. In any given year, what would be the maximum loss you could tolerate on your total portfolio before you would want to change your strategy?\n` +
+      `Answer: ${getB3Label(answers.B3)}\n\n` +
+
+      `B4. Imagine your portfolio lost 20% of its value in the first year. What best describes your likely reaction?\n` +
+      `Answer: ${getB4Label(answers.B4)}\n\n` +
+
+      `C1. How would you describe your investment experience?\n` +
+      `Answer: ${getC1Label(answers.C1)}\n\n` +
+
+      `C2. How well do you understand the relationship between risk and return?\n` +
+      `Answer: ${getC2Label(answers.C2)}\n\n` +
+
+      `C3. Have you ever experienced a significant investment loss (more than 10%)?\n` +
+      `Answer: ${getC3Label(answers.C3)}\n\n` +
+
+      `D1. When making investment decisions, which statement best describes you?\n` +
+      `Answer: ${getD1Label(answers.D1)}\n\n` +
+
+      `D2. How do you typically react to market volatility in the news?\n` +
+      `Answer: ${getD2Label(answers.D2)}\n\n` +
+
+      `Adjustment Flags:\n` +
+      `  Age over 65: ${form.ageOver65 && form.ageOver65.checked ? "Yes" : "No"}\n` +
+      `  Approaching retirement (within 5 years): ${form.approachingRetirement && form.approachingRetirement.checked ? "Yes" : "No"}\n` +
+      `  Large inheritance/windfall: ${form.inheritanceWindfall && form.inheritanceWindfall.checked ? "Yes" : "No"}\n` +
+      `  Single income household: ${form.singleIncome && form.singleIncome.checked ? "Yes" : "No"}\n` +
+      `  Pension/guaranteed income: ${form.pensionIncome && form.pensionIncome.checked ? "Yes" : "No"}\n`;
 
     const payload = {
+      caseId,
       subject,
       body,
       primaryClientName: form.primaryClientName.value || "",
@@ -659,6 +845,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
 
 </body>
 </html>
