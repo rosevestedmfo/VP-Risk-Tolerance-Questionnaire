@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advisor Risk Questionnaire Completion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      padding: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #f7f7f7;
+    }
+    h2, h3 {
+      margin-top: 1.5rem;
+    }
+    fieldset {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+    }
+    legend {
+      font-weight: bold;
+      padding: 0 0.25rem;
+    }
+    label {
+      display: block;
+      margin: 0.25rem 0;
+    }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+    }
+    #clientSummary {
+      padding: 1rem;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    button[type="submit"] {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Advisor Risk Questionnaire Completion</h2>
+
+  <div id="clientSummary">
+    <p><strong>Case ID:</strong> <span id="caseIdDisplay">Missing</span></p>
+    <p style="font-size: 0.9rem; color: #555;">
+      This advisor section is tied to the client's questionnaire using the Case ID above.
+      The full client Q&A and scoring details will be retrieved by Zapier using this ID.
+    </p>
+  </div>
+
+  <form id="advisorForm">
+    <fieldset>
+      <legend>Advisor Confirmation</legend>
+      <label>
+        Confirmed Risk Profile:
+        <select name="confirmedRiskProfile" required>
+          <option value="">Select...</option>
+          <option value="Conservative">Conservative</option>
+          <option value="Moderate Conservative">Moderate Conservative</option>
+          <option value="Moderate">Moderate</option>
+          <option value="Moderate Aggressive">Moderate Aggressive</option>
+          <option value="Aggressive">Aggressive</option>
+        </select>
+      </label>
+      <label>
+        Recommended Portfolio / Allocation:
+        <input type="text" name="recommendedAllocation" required />
+      </label>
+      <label>
+        Notes / Rationale:
+        <textarea name="advisorNotes" placeholder="Add any important context, rationale, or caveats..."></textarea>
+      </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Advisor Details</legend>
+      <label>
+        Advisor Name:
+        <input type="text" name="advisorName" required />
+      </label>
+      <label>
+        Completion Date:
+        <input type="date" name="completionDate" required />
+      </label>
+    </fieldset>
+
+    <button type="submit">Submit Advisor Completion</button>
+  </form>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Your actual Zapier webhook URL is already placed here ✔
+      const FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzcc9ys/";
+
+      // Read ?caseId=... from the URL
+      const params = new URLSearchParams(window.location.search);
+      const caseId = params.get("caseId") || "";
+
+      const caseIdDisplay = document.getElementById("caseIdDisplay");
+      caseIdDisplay.textContent = caseId || "Missing";
+
+      const form = document.getElementById("advisorForm");
+      if (!form) return;
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const confirmedRiskProfile = form.confirmedRiskProfile.value;
+        const recommendedAllocation = form.recommendedAllocation.value;
+        const advisorNotes = form.advisorNotes.value;
+        const advisorName = form.advisorName.value;
+        const completionDate = form.completionDate.value;
+
+        const subject =
+          `Advisor Completion – Case ID: ${caseId || "Unknown"}`;
+
+        const body =
+          `Advisor Completion for Risk Tolerance Questionnaire\n\n` +
+          `Case ID: ${caseId || "N/A"}\n\n` +
+          `Confirmed Risk Profile: ${confirmedRiskProfile}\n` +
+          `Recommended Portfolio / Allocation: ${recommendedAllocation}\n\n` +
+          `Advisor Notes:\n${advisorNotes || ""}\n\n` +
+          `Advisor: ${advisorName}\n` +
+          `Completion Date: ${completionDate}\n`;
+
+        const payload = {
+          caseId,
+          subject,
+          body,
+          confirmedRiskProfile,
+          recommendedAllocation,
+          advisorNotes,
+          advisorName,
+          completionDate
+        };
+
+        try {
+          await fetch(FLOW_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            mode: "no-cors"
+          });
+
+          alert("Advisor completion submitted successfully.");
+          form.reset();
+        } catch (err) {
+          console.error("Error sending advisor completion:", err);
+          alert("There was a problem submitting the advisor completion. Please try again.");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
