@@ -2,850 +2,597 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Risk Tolerance Questionnaire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vested Partners – Risk Tolerance Questionnaire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --accent: #0096a6;
+      --accent-dark: #006b76;
+      --bg: #f5f7fa;
+      --border: #d0d7e2;
+      --text: #222;
+      --muted: #555;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.5;
-      padding: 1.5rem;
-      max-width: 900px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .page {
+      max-width: 960px;
       margin: 0 auto;
-      background-color: #f7f7f7;
+      padding: 24px 16px 48px;
     }
-    h2, h3 {
-      margin-top: 1.5rem;
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
     }
-    fieldset {
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      background-color: #fff;
+    header img {
+      max-height: 64px;
+      width: auto;
     }
-    legend {
-      font-weight: bold;
-      padding: 0 0.25rem;
+    header .title-block h1 {
+      font-size: 1.4rem;
+      margin: 0;
+      letter-spacing: 0.12em;
+    }
+    header .title-block p {
+      margin: 2px 0 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+    }
+    h2 {
+      margin-top: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      font-size: 1.1rem;
+    }
+    h3 {
+      margin-top: 18px;
+      font-size: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      margin-top: 12px;
     }
     label {
-      display: block;
-      margin: 0.25rem 0;
+      font-size: 0.95rem;
     }
-    #scoreSummary {
-      background-color: #fff;
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 24px;
     }
-    button[type="submit"] {
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
-      border: none;
+    .question {
+      margin: 16px 0 8px;
+    }
+    .question p {
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .options label {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
       cursor: pointer;
+    }
+    .options input[type="radio"] {
+      margin-top: 2px;
+    }
+    .score-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.9rem;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+    .score-pill {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef4ff;
+      border: 1px solid var(--border);
+    }
+    .summary-box {
+      background: #f0fbfc;
+      border-radius: 8px;
+      border: 1px solid #b7e4ea;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      margin-top: 12px;
+    }
+    .summary-box strong {
+      color: var(--accent-dark);
+    }
+    .adjustments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 6px 24px;
+      margin-top: 6px;
+    }
+    .adjustments label {
+      font-size: 0.9rem;
+    }
+    .btn-row {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    button:hover {
+      background: var(--accent-dark);
+    }
+    .note {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .status {
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+    .status.ok { color: #1b7f3b; }
+    .status.err { color: #b00020; }
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; }
+      header .title-block h1 { font-size: 1.1rem; }
     }
   </style>
 </head>
 <body>
-<form id="riskForm">
-  <h2>Risk Tolerance Questionnaire</h2>
+  <div class="page">
+    <header>
+      <!-- Make sure this PNG is in the same folder as this file -->
+      <img src="VestedPartners-768x159.png" alt="Vested Partners Logo">
+      <div class="title-block">
+        <h1>RISK TOLERANCE QUESTIONNAIRE</h1>
+        <p>VESTED PARTNERS · A MULTI-FAMILY OFFICE</p>
+      </div>
+    </header>
 
-  <!-- CLIENT INFORMATION -->
-  <fieldset>
-    <legend>CLIENT INFORMATION</legend>
-    <label>
-      Primary Client Name:
-      <input type="text" name="primaryClientName" required>
-    </label>
-    <label>
-      Co-Client/Spouse Name:
-      <input type="text" name="coClientName">
-    </label>
-    <label>
-      Date:
-      <input type="date" name="date" required>
-    </label>
-    <label>
-      Advisor:
-      <input type="text" name="advisorName" required>
-    </label>
-  </fieldset>
+    <form id="rtq-form">
+      <input type="hidden" id="caseId" name="caseId" />
 
-  <hr>
+      <h2>Client Information</h2>
+      <div class="card grid-2">
+        <label>
+          Primary Client Name
+          <input type="text" name="primaryClientName" id="primaryClientName" required />
+        </label>
+        <label>
+          Co-Client/Spouse Name
+          <input type="text" name="coClientName" />
+        </label>
+        <label>
+          Date
+          <input type="date" name="date" required />
+        </label>
+        <label>
+          Advisor
+          <input type="text" name="advisor" />
+        </label>
+        <div>
+          <span class="note"><strong>Case ID:</strong> <span id="caseIdDisplay"></span> (for advisor reference)</span>
+        </div>
+      </div>
 
-  <!-- SECTION A -->
-  <h3>SECTION A: FINANCIAL CAPACITY (30 points possible)</h3>
+      <!-- SECTION A -->
+      <h2>Section A – Financial Capacity (30 points possible)</h2>
+      <div class="card" id="sectionA">
+        <div class="question" data-code="A1" data-text="A1. What is your investment time horizon for the majority of these funds?">
+          <p>A1. What is your investment time horizon for the majority of these funds?</p>
+          <div class="options">
+            <label><input type="radio" name="A1" value="0" data-section="A">Less than 2 years (0 points)</label>
+            <label><input type="radio" name="A1" value="2" data-section="A">2–5 years (2 points)</label>
+            <label><input type="radio" name="A1" value="4" data-section="A">5–10 years (4 points)</label>
+            <label><input type="radio" name="A1" value="6" data-section="A">10–20 years (6 points)</label>
+            <label><input type="radio" name="A1" value="8" data-section="A">More than 20 years (8 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      A1. What is your investment time horizon for the majority of these funds?
-    </legend>
-    <label>
-      <input type="radio" name="A1" value="0" required>
-      Less than 2 years (0 points)
-    </label>
-    <label>
-      <input type="radio" name="A1" value="2">
-      2–5 years (2 points)
-    </label>
-    <label>
-      <input type="radio" name="A1" value="4">
-      5–10 years (4 points)
-    </label>
-    <label>
-      <input type="radio" name="A1" value="6">
-      10–20 years (6 points)
-    </label>
-    <label>
-      <input type="radio" name="A1" value="8">
-      More than 20 years (8 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="A2" data-text="A2. What percentage of your portfolio do you expect to need for liquidity in the next 5 years?">
+          <p>A2. What percentage of your portfolio do you expect to need for liquidity in the next 5 years?</p>
+          <div class="options">
+            <label><input type="radio" name="A2" value="0" data-section="A">More than 50% (0 points)</label>
+            <label><input type="radio" name="A2" value="1" data-section="A">25–50% (1 point)</label>
+            <label><input type="radio" name="A2" value="3" data-section="A">10–25% (3 points)</label>
+            <label><input type="radio" name="A2" value="5" data-section="A">5–10% (5 points)</label>
+            <label><input type="radio" name="A2" value="7" data-section="A">Less than 5% (7 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      A2. What percentage of your portfolio do you expect to need for liquidity in the next 5 years?
-    </legend>
-    <label>
-      <input type="radio" name="A2" value="0" required>
-      More than 50% (0 points)
-    </label>
-    <label>
-      <input type="radio" name="A2" value="1">
-      25–50% (1 point)
-    </label>
-    <label>
-      <input type="radio" name="A2" value="3">
-      10–25% (3 points)
-    </label>
-    <label>
-      <input type="radio" name="A2" value="5">
-      5–10% (5 points)
-    </label>
-    <label>
-      <input type="radio" name="A2" value="7">
-      Less than 5% (7 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="A3" data-text="A3. How stable is your primary income source?">
+          <p>A3. How stable is your primary income source?</p>
+          <div class="options">
+            <label><input type="radio" name="A3" value="0" data-section="A">Very unstable/unemployed (0 points)</label>
+            <label><input type="radio" name="A3" value="2" data-section="A">Unstable (commission, contract work) (2 points)</label>
+            <label><input type="radio" name="A3" value="3" data-section="A">Somewhat stable (3 points)</label>
+            <label><input type="radio" name="A3" value="5" data-section="A">Stable salary (5 points)</label>
+            <label><input type="radio" name="A3" value="7" data-section="A">Very stable (tenured, government) + other income sources (7 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      A3. How stable is your primary income source?
-    </legend>
-    <label>
-      <input type="radio" name="A3" value="0" required>
-      Very unstable/unemployed (0 points)
-    </label>
-    <label>
-      <input type="radio" name="A3" value="2">
-      Unstable (commission, contract work) (2 points)
-    </label>
-    <label>
-      <input type="radio" name="A3" value="3">
-      Somewhat stable (3 points)
-    </label>
-    <label>
-      <input type="radio" name="A3" value="5">
-      Stable salary (5 points)
-    </label>
-    <label>
-      <input type="radio" name="A3" value="7">
-      Very stable (tenured, government) + other income sources (7 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="A4" data-text="A4. What is your current debt-to-income ratio (excluding mortgage)?">
+          <p>A4. What is your current debt-to-income ratio (excluding mortgage)?</p>
+          <div class="options">
+            <label><input type="radio" name="A4" value="0" data-section="A">More than 25% (0 points)</label>
+            <label><input type="radio" name="A4" value="1" data-section="A">15–25% (1 point)</label>
+            <label><input type="radio" name="A4" value="3" data-section="A">10–15% (3 points)</label>
+            <label><input type="radio" name="A4" value="5" data-section="A">5–10% (5 points)</label>
+            <label><input type="radio" name="A4" value="8" data-section="A">Less than 5% or debt-free (8 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      A4. What is your current debt-to-income ratio (excluding mortgage)?
-    </legend>
-    <label>
-      <input type="radio" name="A4" value="0" required>
-      More than 25% (0 points)
-    </label>
-    <label>
-      <input type="radio" name="A4" value="1">
-      15–25% (1 point)
-    </label>
-    <label>
-      <input type="radio" name="A4" value="3">
-      10–15% (3 points)
-    </label>
-    <label>
-      <input type="radio" name="A4" value="5">
-      5–10% (5 points)
-    </label>
-    <label>
-      <input type="radio" name="A4" value="8">
-      Less than 5% or debt-free (8 points)
-    </label>
-  </fieldset>
+        <div class="score-row">
+          <span class="score-pill">Section A Total: <strong><span id="scoreA">0</span> / 30</strong></span>
+        </div>
+      </div>
 
-  <hr>
+      <!-- SECTION B -->
+      <h2>Section B – Risk Tolerance (40 points possible)</h2>
+      <div class="card" id="sectionB">
+        <div class="question" data-code="B1" data-text="B1. During the 2008 financial crisis, the stock market lost approximately 37%. If you had owned a diversified stock portfolio then, what would you have done?">
+          <p>B1. During the 2008 financial crisis, the stock market lost approximately 37%. If you had owned a diversified stock portfolio then, what would you have done?</p>
+          <div class="options">
+            <label><input type="radio" name="B1" value="0" data-section="B">Sold everything immediately to avoid further losses (0 points)</label>
+            <label><input type="radio" name="B1" value="3" data-section="B">Sold some to reduce my risk exposure (3 points)</label>
+            <label><input type="radio" name="B1" value="7" data-section="B">Held on and did nothing (7 points)</label>
+            <label><input type="radio" name="B1" value="10" data-section="B">Bought more while prices were low (10 points)</label>
+          </div>
+        </div>
 
-  <!-- SECTION B -->
-  <h3>SECTION B: RISK TOLERANCE (40 points possible)</h3>
+        <div class="question" data-code="B2" data-text="B2. You invest $100,000 today. What would you expect this investment to be worth in 10 years?">
+          <p>B2. You invest $100,000 today. What would you expect this investment to be worth in 10 years?</p>
+          <div class="options">
+            <label><input type="radio" name="B2" value="2" data-section="B">$100,000–120,000 (I want to preserve capital) (2 points)</label>
+            <label><input type="radio" name="B2" value="4" data-section="B">$120,000–160,000 (Steady growth is important) (4 points)</label>
+            <label><input type="radio" name="B2" value="6" data-section="B">$160,000–220,000 (I want good growth) (6 points)</label>
+            <label><input type="radio" name="B2" value="8" data-section="B">$220,000–300,000 (I want high growth) (8 points)</label>
+            <label><input type="radio" name="B2" value="10" data-section="B">More than $300,000 (Maximum growth is my priority) (10 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      B1. During the 2008 financial crisis, the stock market lost approximately 37%. If you had
-      owned a diversified stock portfolio then, what would you have done?
-    </legend>
-    <label>
-      <input type="radio" name="B1" value="0" required>
-      Sold everything immediately to avoid further losses (0 points)
-    </label>
-    <label>
-      <input type="radio" name="B1" value="3">
-      Sold some to reduce my risk exposure (3 points)
-    </label>
-    <label>
-      <input type="radio" name="B1" value="7">
-      Held on and did nothing (7 points)
-    </label>
-    <label>
-      <input type="radio" name="B1" value="10">
-      Bought more while prices were low (10 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="B3" data-text="B3. In any given year, what would be the maximum loss you could tolerate on your total portfolio before you would want to change your strategy?">
+          <p>B3. In any given year, what would be the maximum loss you could tolerate on your total portfolio before you would want to change your strategy?</p>
+          <div class="options">
+            <label><input type="radio" name="B3" value="0" data-section="B">Any loss would concern me (0 points)</label>
+            <label><input type="radio" name="B3" value="2" data-section="B">5% loss (2 points)</label>
+            <label><input type="radio" name="B3" value="4" data-section="B">10% loss (4 points)</label>
+            <label><input type="radio" name="B3" value="6" data-section="B">15% loss (6 points)</label>
+            <label><input type="radio" name="B3" value="8" data-section="B">20% loss (8 points)</label>
+            <label><input type="radio" name="B3" value="10" data-section="B">More than 25% loss (10 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      B2. You invest $100,000 today. What would you expect this investment to be worth in 10 years?
-    </legend>
-    <label>
-      <input type="radio" name="B2" value="2" required>
-      $100,000–120,000 (I want to preserve capital) (2 points)
-    </label>
-    <label>
-      <input type="radio" name="B2" value="4">
-      $120,000–160,000 (Steady growth is important) (4 points)
-    </label>
-    <label>
-      <input type="radio" name="B2" value="6">
-      $160,000–220,000 (I want good growth) (6 points)
-    </label>
-    <label>
-      <input type="radio" name="B2" value="8">
-      $220,000–300,000 (I want high growth) (8 points)
-    </label>
-    <label>
-      <input type="radio" name="B2" value="10">
-      More than $300,000 (Maximum growth is my priority) (10 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="B4" data-text="B4. Imagine your portfolio lost 20% of its value in the first year. What best describes your likely reaction?">
+          <p>B4. Imagine your portfolio lost 20% of its value in the first year. What best describes your likely reaction?</p>
+          <div class="options">
+            <label><input type="radio" name="B4" value="0" data-section="B">I would be devastated and sell everything (0 points)</label>
+            <label><input type="radio" name="B4" value="2" data-section="B">I would be very concerned and sell most investments (2 points)</label>
+            <label><input type="radio" name="B4" value="5" data-section="B">I would be worried but probably hold on (5 points)</label>
+            <label><input type="radio" name="B4" value="8" data-section="B">I would stay calm and stick to my plan (8 points)</label>
+            <label><input type="radio" name="B4" value="10" data-section="B">I would see it as a buying opportunity (10 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      B3. In any given year, what would be the maximum loss you could tolerate on your total
-      portfolio before you would want to change your strategy?
-    </legend>
-    <label>
-      <input type="radio" name="B3" value="0" required>
-      Any loss would concern me (0 points)
-    </label>
-    <label>
-      <input type="radio" name="B3" value="2">
-      5% loss (2 points)
-    </label>
-    <label>
-      <input type="radio" name="B3" value="4">
-      10% loss (4 points)
-    </label>
-    <label>
-      <input type="radio" name="B3" value="6">
-      15% loss (6 points)
-    </label>
-    <label>
-      <input type="radio" name="B3" value="8">
-      20% loss (8 points)
-    </label>
-    <label>
-      <input type="radio" name="B3" value="10">
-      More than 25% loss (10 points)
-    </label>
-  </fieldset>
+        <div class="score-row">
+          <span class="score-pill">Section B Total: <strong><span id="scoreB">0</span> / 40</strong></span>
+        </div>
+      </div>
 
-  <fieldset>
-    <legend>
-      B4. Imagine your portfolio lost 20% of its value in the first year. What best describes your
-      likely reaction?
-    </legend>
-    <label>
-      <input type="radio" name="B4" value="0" required>
-      I would be devastated and sell everything (0 points)
-    </label>
-    <label>
-      <input type="radio" name="B4" value="2">
-      I would be very concerned and sell most investments (2 points)
-    </label>
-    <label>
-      <input type="radio" name="B4" value="5">
-      I would be worried but probably hold on (5 points)
-    </label>
-    <label>
-      <input type="radio" name="B4" value="8">
-      I would stay calm and stick to my plan (8 points)
-    </label>
-    <label>
-      <input type="radio" name="B4" value="10">
-      I would see it as a buying opportunity (10 points)
-    </label>
-  </fieldset>
+      <!-- SECTION C -->
+      <h2>Section C – Investment Experience &amp; Knowledge (15 points possible)</h2>
+      <div class="card" id="sectionC">
+        <div class="question" data-code="C1" data-text="C1. How would you describe your investment experience?">
+          <p>C1. How would you describe your investment experience?</p>
+          <div class="options">
+            <label><input type="radio" name="C1" value="0" data-section="C">No experience (0 points)</label>
+            <label><input type="radio" name="C1" value="1" data-section="C">Limited experience (savings accounts, CDs) (1 point)</label>
+            <label><input type="radio" name="C1" value="3" data-section="C">Some experience (mutual funds, basic stocks) (3 points)</label>
+            <label><input type="radio" name="C1" value="5" data-section="C">Considerable experience (diverse portfolio, 5+ years) (5 points)</label>
+            <label><input type="radio" name="C1" value="5" data-section="C">Extensive experience (complex strategies, 10+ years) (5 points)</label>
+          </div>
+        </div>
 
-  <hr>
+        <div class="question" data-code="C2" data-text="C2. How well do you understand the relationship between risk and return?">
+          <p>C2. How well do you understand the relationship between risk and return?</p>
+          <div class="options">
+            <label><input type="radio" name="C2" value="0" data-section="C">I don't understand it (0 points)</label>
+            <label><input type="radio" name="C2" value="2" data-section="C">I have a basic understanding (2 points)</label>
+            <label><input type="radio" name="C2" value="4" data-section="C">I understand it fairly well (4 points)</label>
+            <label><input type="radio" name="C2" value="5" data-section="C">I understand it very well (5 points)</label>
+          </div>
+        </div>
 
-  <!-- SECTION C -->
-  <h3>SECTION C: INVESTMENT EXPERIENCE &amp; KNOWLEDGE (15 points possible)</h3>
+        <div class="question" data-code="C3" data-text="C3. Have you ever experienced a significant investment loss (more than 10%)?">
+          <p>C3. Have you ever experienced a significant investment loss (more than 10%)?</p>
+          <div class="options">
+            <label><input type="radio" name="C3" value="0" data-section="C">No, and it would devastate me (0 points)</label>
+            <label><input type="radio" name="C3" value="2" data-section="C">No, but I think I could handle it (2 points)</label>
+            <label><input type="radio" name="C3" value="1" data-section="C">Yes, and I panicked and sold (1 point)</label>
+            <label><input type="radio" name="C3" value="4" data-section="C">Yes, but I held on and recovered (4 points)</label>
+            <label><input type="radio" name="C3" value="5" data-section="C">Yes, and I bought more at lower prices (5 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      C1. How would you describe your investment experience?
-    </legend>
-    <label>
-      <input type="radio" name="C1" value="0" required>
-      No experience (0 points)
-    </label>
-    <label>
-      <input type="radio" name="C1" value="1">
-      Limited experience (savings accounts, CDs) (1 point)
-    </label>
-    <label>
-      <input type="radio" name="C1" value="3">
-      Some experience (mutual funds, basic stocks) (3 points)
-    </label>
-    <label>
-      <input type="radio" name="C1" value="5">
-      Considerable experience (diverse portfolio, 5+ years) (5 points)
-    </label>
-    <label>
-      <input type="radio" name="C1" value="5">
-      Extensive experience (complex strategies, 10+ years) (5 points)
-    </label>
-  </fieldset>
+        <div class="score-row">
+          <span class="score-pill">Section C Total: <strong><span id="scoreC">0</span> / 15</strong></span>
+        </div>
+      </div>
 
-  <fieldset>
-    <legend>
-      C2. How well do you understand the relationship between risk and return?
-    </legend>
-    <label>
-      <input type="radio" name="C2" value="0" required>
-      I don't understand it (0 points)
-    </label>
-    <label>
-      <input type="radio" name="C2" value="2">
-      I have a basic understanding (2 points)
-    </label>
-    <label>
-      <input type="radio" name="C2" value="4">
-      I understand it fairly well (4 points)
-    </label>
-    <label>
-      <input type="radio" name="C2" value="5">
-      I understand it very well (5 points)
-    </label>
-  </fieldset>
+      <!-- SECTION D -->
+      <h2>Section D – Behavioral Factors (15 points possible)</h2>
+      <div class="card" id="sectionD">
+        <div class="question" data-code="D1" data-text="D1. When making investment decisions, which statement best describes you?">
+          <p>D1. When making investment decisions, which statement best describes you?</p>
+          <div class="options">
+            <label><input type="radio" name="D1" value="0" data-section="D">I need guarantees and certainty (0 points)</label>
+            <label><input type="radio" name="D1" value="2" data-section="D">I prefer low risk with modest returns (2 points)</label>
+            <label><input type="radio" name="D1" value="4" data-section="D">I want balanced growth with some risk (4 points)</label>
+            <label><input type="radio" name="D1" value="6" data-section="D">I'm comfortable with higher risk for better returns (6 points)</label>
+            <label><input type="radio" name="D1" value="7" data-section="D">I seek maximum returns regardless of risk (7 points)</label>
+          </div>
+        </div>
 
-  <fieldset>
-    <legend>
-      C3. Have you ever experienced a significant investment loss (more than 10%)?
-    </legend>
-    <label>
-      <input type="radio" name="C3" value="0" required>
-      No, and it would devastate me (0 points)
-    </label>
-    <label>
-      <input type="radio" name="C3" value="2">
-      No, but I think I could handle it (2 points)
-    </label>
-    <label>
-      <input type="radio" name="C3" value="1">
-      Yes, and I panicked and sold (1 point)
-    </label>
-    <label>
-      <input type="radio" name="C3" value="4">
-      Yes, but I held on and recovered (4 points)
-    </label>
-    <label>
-      <input type="radio" name="C3" value="5">
-      Yes, and I bought more at lower prices (5 points)
-    </label>
-  </fieldset>
+        <div class="question" data-code="D2" data-text="D2. How do you typically react to market volatility in the news?">
+          <p>D2. How do you typically react to market volatility in the news?</p>
+          <div class="options">
+            <label><input type="radio" name="D2" value="0" data-section="D">I get very anxious and want to make changes (0 points)</label>
+            <label><input type="radio" name="D2" value="2" data-section="D">I worry but usually don't act (2 points)</label>
+            <label><input type="radio" name="D2" value="4" data-section="D">I pay attention but stay calm (4 points)</label>
+            <label><input type="radio" name="D2" value="6" data-section="D">I largely ignore short-term market news (6 points)</label>
+            <label><input type="radio" name="D2" value="8" data-section="D">I look for opportunities during volatile times (8 points)</label>
+          </div>
+        </div>
 
-  <hr>
+        <div class="score-row">
+          <span class="score-pill">Section D Total: <strong><span id="scoreD">0</span> / 15</strong></span>
+        </div>
+      </div>
 
-  <!-- SECTION D -->
-  <h3>SECTION D: BEHAVIORAL FACTORS (15 points possible)</h3>
+      <!-- ADJUSTMENTS & SUMMARY -->
+      <h2>Scoring Summary & Adjustments</h2>
+      <div class="card">
+        <div class="score-row">
+          <span class="score-pill">Raw Total (before adjustments): <strong><span id="rawTotal">0</span> / 100</strong></span>
+          <span class="score-pill">Adjustments Applied: <strong><span id="adjustmentTotal">0</span> points</strong></span>
+          <span class="score-pill">Final Score: <strong><span id="finalScore">0</span> / 100</strong></span>
+          <span class="score-pill">Preliminary Risk Profile: <strong><span id="riskProfileDisplay">Conservative</span></strong></span>
+        </div>
 
-  <fieldset>
-    <legend>
-      D1. When making investment decisions, which statement best describes you?
-    </legend>
-    <label>
-      <input type="radio" name="D1" value="0" required>
-      I need guarantees and certainty (0 points)
-    </label>
-    <label>
-      <input type="radio" name="D1" value="2">
-      I prefer low risk with modest returns (2 points)
-    </label>
-    <label>
-      <input type="radio" name="D1" value="4">
-      I want balanced growth with some risk (4 points)
-    </label>
-    <label>
-      <input type="radio" name="D1" value="6">
-      I'm comfortable with higher risk for better returns (6 points)
-    </label>
-    <label>
-      <input type="radio" name="D1" value="7">
-      I seek maximum returns regardless of risk (7 points)
-    </label>
-  </fieldset>
+        <h3>Adjustment Factors</h3>
+        <div class="adjustments">
+          <label><input type="checkbox" class="adjust" value="-5"> Age over 65 (subtract 5 points)</label>
+          <label><input type="checkbox" class="adjust" value="-10"> Approaching retirement (within 5 years) (subtract 10 points)</label>
+          <label><input type="checkbox" class="adjust" value="5"> Large inheritance / windfall (add 5 points)</label>
+          <label><input type="checkbox" class="adjust" value="-5"> Single income household (subtract 5 points)</label>
+          <label><input type="checkbox" class="adjust" value="5"> Pension / guaranteed income (add 5 points)</label>
+        </div>
 
-  <fieldset>
-    <legend>
-      D2. How do you typically react to market volatility in the news?
-    </legend>
-    <label>
-      <input type="radio" name="D2" value="0" required>
-      I get very anxious and want to make changes (0 points)
-    </label>
-    <label>
-      <input type="radio" name="D2" value="2">
-      I worry but usually don't act (2 points)
-    </label>
-    <label>
-      <input type="radio" name="D2" value="4">
-      I pay attention but stay calm (4 points)
-    </label>
-    <label>
-      <input type="radio" name="D2" value="6">
-      I largely ignore short-term market news (6 points)
-    </label>
-    <label>
-      <input type="radio" name="D2" value="8">
-      I look for opportunities during volatile times (8 points)
-    </label>
-  </fieldset>
+        <div class="summary-box" id="profileSummary">
+          <strong>Conservative (0–25 points)</strong><br>
+          Capital preservation is your primary concern. Typical allocation: 20% stocks, 80% bonds/cash.
+        </div>
+      </div>
 
-  <hr>
-
-  <!-- SCORE ADJUSTMENTS -->
-  <h3>SCORE ADJUSTMENTS</h3>
-  <p>Adjustment Factors:</p>
-  <label>
-    <input type="checkbox" name="ageOver65">
-    Age over 65: Subtract 5 points
-  </label>
-  <label>
-    <input type="checkbox" name="approachingRetirement">
-    Approaching retirement (within 5 years): Subtract 10 points
-  </label>
-  <label>
-    <input type="checkbox" name="inheritanceWindfall">
-    Large inheritance/windfall: Add 5 points
-  </label>
-  <label>
-    <input type="checkbox" name="singleIncome">
-    Single income household: Subtract 5 points
-  </label>
-  <label>
-    <input type="checkbox" name="pensionIncome">
-    Pension/guaranteed income: Add 5 points
-  </label>
-
-  <hr>
-
-  <!-- CLIENT-FACING SCORE SUMMARY -->
-  <div id="scoreSummary" style="padding:0.5rem; border:1px solid #ccc; margin-bottom:1rem;">
-    <p><strong>Preliminary Risk Score:</strong> <span id="scoreDisplay">–</span> / 100</p>
-    <p><strong>Risk Profile:</strong> <span id="profileDisplay">–</span></p>
+      <div class="btn-row">
+        <button type="submit">Submit Questionnaire</button>
+        <span class="note">A copy of your full responses and score will be sent securely to your advisor.</span>
+      </div>
+      <div id="status" class="status"></div>
+    </form>
   </div>
 
-  <button type="submit">Submit Questionnaire</button>
-</form>
+  <script>
+    // 🔧 CONFIG: your existing Zapier webhook URL for the client Zap
+    const FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzhnnlv/";
 
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzhnnlv/";
-
-  function generateCaseId() {
-    const now = Date.now().toString(36);
-    const rand = Math.random().toString(36).substring(2, 8);
-    return `RTQ-${now}-${rand}`;
-  }
-
-  function getRiskProfile(score) {
-    if (score <= 25) return "Conservative";
-    if (score <= 45) return "Moderate Conservative";
-    if (score <= 65) return "Moderate";
-    if (score <= 85) return "Moderate Aggressive";
-    return "Aggressive";
-  }
-
-  function getRadioValue(form, name) {
-    const field = form.querySelector('input[name="' + name + '"]:checked');
-    return field ? parseInt(field.value, 10) : 0;
-  }
-
-  function calculateScores(form) {
-    const A1 = getRadioValue(form, "A1");
-    const A2 = getRadioValue(form, "A2");
-    const A3 = getRadioValue(form, "A3");
-    const A4 = getRadioValue(form, "A4");
-
-    const B1 = getRadioValue(form, "B1");
-    const B2 = getRadioValue(form, "B2");
-    const B3 = getRadioValue(form, "B3");
-    const B4 = getRadioValue(form, "B4");
-
-    const C1 = getRadioValue(form, "C1");
-    const C2 = getRadioValue(form, "C2");
-    const C3 = getRadioValue(form, "C3");
-
-    const D1 = getRadioValue(form, "D1");
-    const D2 = getRadioValue(form, "D2");
-
-    const sectionA = A1 + A2 + A3 + A4;
-    const sectionB = B1 + B2 + B3 + B4;
-    const sectionC = C1 + C2 + C3;
-    const sectionD = D1 + D2;
-
-    const rawTotal = sectionA + sectionB + sectionC + sectionD;
-
-    let adjustments = 0;
-    if (form.ageOver65 && form.ageOver65.checked) adjustments -= 5;
-    if (form.approachingRetirement && form.approachingRetirement.checked) adjustments -= 10;
-    if (form.inheritanceWindfall && form.inheritanceWindfall.checked) adjustments += 5;
-    if (form.singleIncome && form.singleIncome.checked) adjustments -= 5;
-    if (form.pensionIncome && form.pensionIncome.checked) adjustments += 5;
-
-    const finalScore = rawTotal + adjustments;
-    const finalScoreClamped = Math.max(0, Math.min(100, finalScore));
-    const riskProfile = getRiskProfile(finalScoreClamped);
-
-    return {
-      sectionA,
-      sectionB,
-      sectionC,
-      sectionD,
-      rawTotal,
-      adjustments,
-      finalScoreClamped,
-      riskProfile
-    };
-  }
-
-  function updateDisplay(form, scores) {
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    const profileDisplay = document.getElementById("profileDisplay");
-    if (!scoreDisplay || !profileDisplay) return;
-
-    const anyAnswered = form.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
-
-    if (!anyAnswered) {
-      scoreDisplay.textContent = "–";
-      profileDisplay.textContent = "–";
-      return;
+    function generateCaseId() {
+      const randomPart = Math.random().toString(36).substring(2, 10);
+      return "RTQ-" + randomPart;
     }
 
-    scoreDisplay.textContent = scores.finalScoreClamped;
-    profileDisplay.textContent = scores.riskProfile;
-  }
-
-  // Label helpers for full Q&A text
-  function getA1Label(v) {
-    switch (v) {
-      case 0: return "Less than 2 years (0 points)";
-      case 2: return "2–5 years (2 points)";
-      case 4: return "5–10 years (4 points)";
-      case 6: return "10–20 years (6 points)";
-      case 8: return "More than 20 years (8 points)";
-      default: return "";
+    function classifyRisk(score) {
+      if (score <= 25) return "Conservative";
+      if (score <= 45) return "Moderate Conservative";
+      if (score <= 65) return "Moderate";
+      if (score <= 85) return "Moderate Aggressive";
+      return "Aggressive";
     }
-  }
 
-  function getA2Label(v) {
-    switch (v) {
-      case 0: return "More than 50% (0 points)";
-      case 1: return "25–50% (1 point)";
-      case 3: return "10–25% (3 points)";
-      case 5: return "5–10% (5 points)";
-      case 7: return "Less than 5% (7 points)";
-      default: return "";
+    function profileText(profile) {
+      switch (profile) {
+        case "Conservative":
+          return "Conservative (0–25 points)\n• Capital preservation is your primary concern\n• Typical Allocation: 20% stocks, 80% bonds/cash\n• Expected Return: 3–5% annually\n• Maximum Expected Loss: 3–7% in worst year";
+        case "Moderate Conservative":
+          return "Moderate Conservative (26–45 points)\n• You want some growth but stability is important\n• Typical Allocation: 40% stocks, 60% bonds/cash\n• Expected Return: 4–7% annually\n• Maximum Expected Loss: 8–15% in worst year";
+        case "Moderate":
+          return "Moderate (46–65 points)\n• You want balanced growth with moderate risk\n• Typical Allocation: 60% stocks, 40% bonds/cash\n• Expected Return: 6–8% annually\n• Maximum Expected Loss: 15–25% in worst year";
+        case "Moderate Aggressive":
+          return "Moderate Aggressive (66–85 points)\n• You prioritize growth and can handle volatility\n• Typical Allocation: 80% stocks, 20% bonds/cash\n• Expected Return: 7–10% annually\n• Maximum Expected Loss: 25–35% in worst year";
+        case "Aggressive":
+          return "Aggressive (86–100 points)\n• Maximum growth is your goal regardless of volatility\n• Typical Allocation: 95% stocks, 5% bonds/cash\n• Expected Return: 8–12% annually\n• Maximum Expected Loss: 35–50% in worst year";
+      }
     }
-  }
 
-  function getA3Label(v) {
-    switch (v) {
-      case 0: return "Very unstable/unemployed (0 points)";
-      case 2: return "Unstable (commission, contract work) (2 points)";
-      case 3: return "Somewhat stable (3 points)";
-      case 5: return "Stable salary (5 points)";
-      case 7: return "Very stable (tenured, government) + other income sources (7 points)";
-      default: return "";
-    }
-  }
-
-  function getA4Label(v) {
-    switch (v) {
-      case 0: return "More than 25% (0 points)";
-      case 1: return "15–25% (1 point)";
-      case 3: return "10–15% (3 points)";
-      case 5: return "5–10% (5 points)";
-      case 8: return "Less than 5% or debt-free (8 points)";
-      default: return "";
-    }
-  }
-
-  function getB1Label(v) {
-    switch (v) {
-      case 0: return "Sold everything immediately to avoid further losses (0 points)";
-      case 3: return "Sold some to reduce my risk exposure (3 points)";
-      case 7: return "Held on and did nothing (7 points)";
-      case 10: return "Bought more while prices were low (10 points)";
-      default: return "";
-    }
-  }
-
-  function getB2Label(v) {
-    switch (v) {
-      case 2: return "$100,000–120,000 (I want to preserve capital) (2 points)";
-      case 4: return "$120,000–160,000 (Steady growth is important) (4 points)";
-      case 6: return "$160,000–220,000 (I want good growth) (6 points)";
-      case 8: return "$220,000–300,000 (I want high growth) (8 points)";
-      case 10: return "More than $300,000 (Maximum growth is my priority) (10 points)";
-      default: return "";
-    }
-  }
-
-  function getB3Label(v) {
-    switch (v) {
-      case 0: return "Any loss would concern me (0 points)";
-      case 2: return "5% loss (2 points)";
-      case 4: return "10% loss (4 points)";
-      case 6: return "15% loss (6 points)";
-      case 8: return "20% loss (8 points)";
-      case 10: return "More than 25% loss (10 points)";
-      default: return "";
-    }
-  }
-
-  function getB4Label(v) {
-    switch (v) {
-      case 0: return "I would be devastated and sell everything (0 points)";
-      case 2: return "I would be very concerned and sell most investments (2 points)";
-      case 5: return "I would be worried but probably hold on (5 points)";
-      case 8: return "I would stay calm and stick to my plan (8 points)";
-      case 10: return "I would see it as a buying opportunity (10 points)";
-      default: return "";
-    }
-  }
-
-  function getC1Label(v) {
-    switch (v) {
-      case 0: return "No experience (0 points)";
-      case 1: return "Limited experience (savings accounts, CDs) (1 point)";
-      case 3: return "Some experience (mutual funds, basic stocks) (3 points)";
-      case 5: return "Considerable experience (diverse portfolio, 5+ years) (5 points)";
-      default: return "";
-    }
-  }
-
-  function getC2Label(v) {
-    switch (v) {
-      case 0: return "I don't understand it (0 points)";
-      case 2: return "I have a basic understanding (2 points)";
-      case 4: return "I understand it fairly well (4 points)";
-      case 5: return "I understand it very well (5 points)";
-      default: return "";
-    }
-  }
-
-  function getC3Label(v) {
-    switch (v) {
-      case 0: return "No, and it would devastate me (0 points)";
-      case 2: return "No, but I think I could handle it (2 points)";
-      case 1: return "Yes, and I panicked and sold (1 point)";
-      case 4: return "Yes, but I held on and recovered (4 points)";
-      case 5: return "Yes, and I bought more at lower prices (5 points)";
-      default: return "";
-    }
-  }
-
-  function getD1Label(v) {
-    switch (v) {
-      case 0: return "I need guarantees and certainty (0 points)";
-      case 2: return "I prefer low risk with modest returns (2 points)";
-      case 4: return "I want balanced growth with some risk (4 points)";
-      case 6: return "I'm comfortable with higher risk for better returns (6 points)";
-      case 7: return "I seek maximum returns regardless of risk (7 points)";
-      default: return "";
-    }
-  }
-
-  function getD2Label(v) {
-    switch (v) {
-      case 0: return "I get very anxious and want to make changes (0 points)";
-      case 2: return "I worry but usually don't act (2 points)";
-      case 4: return "I pay attention but stay calm (4 points)";
-      case 6: return "I largely ignore short-term market news (6 points)";
-      case 8: return "I look for opportunities during volatile times (8 points)";
-      default: return "";
-    }
-  }
-
-  const form = document.getElementById("riskForm");
-  if (!form) {
-    console.log("riskForm not found");
-    return;
-  }
-
-  function recalcAndUpdate() {
-    const scores = calculateScores(form);
-    updateDisplay(form, scores);
-  }
-
-  const inputs = form.querySelectorAll("input");
-  inputs.forEach(function (input) {
-    input.addEventListener("change", recalcAndUpdate);
-  });
-
-  recalcAndUpdate();
-
-  form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const scores = calculateScores(form);
-    updateDisplay(form, scores);
-
-    // Capture individual answers for full Q&A
-    const answers = {
-      A1: getRadioValue(form, "A1"),
-      A2: getRadioValue(form, "A2"),
-      A3: getRadioValue(form, "A3"),
-      A4: getRadioValue(form, "A4"),
-      B1: getRadioValue(form, "B1"),
-      B2: getRadioValue(form, "B2"),
-      B3: getRadioValue(form, "B3"),
-      B4: getRadioValue(form, "B4"),
-      C1: getRadioValue(form, "C1"),
-      C2: getRadioValue(form, "C2"),
-      C3: getRadioValue(form, "C3"),
-      D1: getRadioValue(form, "D1"),
-      D2: getRadioValue(form, "D2")
-    };
-
-    const {
-      sectionA,
-      sectionB,
-      sectionC,
-      sectionD,
-      rawTotal,
-      adjustments,
-      finalScoreClamped,
-      riskProfile
-    } = scores;
-
-    const caseId = generateCaseId();
-
-    const subject =
-      `New Risk Questionnaire – ${form.primaryClientName.value || "Client"} ` +
-      `(${finalScoreClamped} – ${riskProfile}) [Case ID: ${caseId}]`;
-
-    const body =
-      `Risk Tolerance Questionnaire Submission (Client Copy)\n\n` +
-      `Case ID: ${caseId}\n` +
-      `Primary Client: ${form.primaryClientName.value || ""}\n` +
-      `Co-Client/Spouse: ${form.coClientName.value || ""}\n` +
-      `Date: ${form.date.value || ""}\n` +
-      `Advisor: ${form.advisorName.value || ""}\n\n` +
-
-      `Final Score: ${finalScoreClamped}\n` +
-      `Risk Profile: ${riskProfile}\n` +
-      `Raw Total (before adjustments): ${rawTotal}\n` +
-      `Adjustments: ${adjustments}\n\n` +
-
-      `Section Scores:\n` +
-      `  Section A (Financial Capacity): ${sectionA}\n` +
-      `  Section B (Risk Tolerance): ${sectionB}\n` +
-      `  Section C (Experience & Knowledge): ${sectionC}\n` +
-      `  Section D (Behavioral Factors): ${sectionD}\n\n` +
-
-      `--- Client Questionnaire – Full Copy ---\n\n` +
-
-      `A1. What is your investment time horizon for the majority of these funds?\n` +
-      `Answer: ${getA1Label(answers.A1)}\n\n` +
-
-      `A2. What percentage of your portfolio do you expect to need for liquidity in the next 5 years?\n` +
-      `Answer: ${getA2Label(answers.A2)}\n\n` +
-
-      `A3. How stable is your primary income source?\n` +
-      `Answer: ${getA3Label(answers.A3)}\n\n` +
-
-      `A4. What is your current debt-to-income ratio (excluding mortgage)?\n` +
-      `Answer: ${getA4Label(answers.A4)}\n\n` +
-
-      `B1. During the 2008 financial crisis, the stock market lost approximately 37%. If you had owned a diversified stock portfolio then, what would you have done?\n` +
-      `Answer: ${getB1Label(answers.B1)}\n\n` +
-
-      `B2. You invest $100,000 today. What would you expect this investment to be worth in 10 years?\n` +
-      `Answer: ${getB2Label(answers.B2)}\n\n` +
-
-      `B3. In any given year, what would be the maximum loss you could tolerate on your total portfolio before you would want to change your strategy?\n` +
-      `Answer: ${getB3Label(answers.B3)}\n\n` +
-
-      `B4. Imagine your portfolio lost 20% of its value in the first year. What best describes your likely reaction?\n` +
-      `Answer: ${getB4Label(answers.B4)}\n\n` +
-
-      `C1. How would you describe your investment experience?\n` +
-      `Answer: ${getC1Label(answers.C1)}\n\n` +
-
-      `C2. How well do you understand the relationship between risk and return?\n` +
-      `Answer: ${getC2Label(answers.C2)}\n\n` +
-
-      `C3. Have you ever experienced a significant investment loss (more than 10%)?\n` +
-      `Answer: ${getC3Label(answers.C3)}\n\n` +
-
-      `D1. When making investment decisions, which statement best describes you?\n` +
-      `Answer: ${getD1Label(answers.D1)}\n\n` +
-
-      `D2. How do you typically react to market volatility in the news?\n` +
-      `Answer: ${getD2Label(answers.D2)}\n\n` +
-
-      `Adjustment Flags:\n` +
-      `  Age over 65: ${form.ageOver65 && form.ageOver65.checked ? "Yes" : "No"}\n` +
-      `  Approaching retirement (within 5 years): ${form.approachingRetirement && form.approachingRetirement.checked ? "Yes" : "No"}\n` +
-      `  Large inheritance/windfall: ${form.inheritanceWindfall && form.inheritanceWindfall.checked ? "Yes" : "No"}\n` +
-      `  Single income household: ${form.singleIncome && form.singleIncome.checked ? "Yes" : "No"}\n` +
-      `  Pension/guaranteed income: ${form.pensionIncome && form.pensionIncome.checked ? "Yes" : "No"}\n`;
-
-    const payload = {
-      caseId,
-      subject,
-      body,
-      primaryClientName: form.primaryClientName.value || "",
-      finalScore: finalScoreClamped,
-      riskProfile: riskProfile
-    };
-
-    try {
-      await fetch(FLOW_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        mode: "no-cors"
+    function updateScores() {
+      const radios = document.querySelectorAll('input[type="radio"]:checked');
+      let sectionTotals = { A: 0, B: 0, C: 0, D: 0 };
+      radios.forEach(r => {
+        const section = r.dataset.section;
+        const val = Number(r.value) || 0;
+        if (section && sectionTotals[section] !== undefined) {
+          sectionTotals[section] += val;
+        }
       });
 
-      alert("Thank you. Your responses have been submitted.");
-      form.reset();
-      recalcAndUpdate();
-    } catch (err) {
-      console.error("Error sending to Zapier:", err);
-      alert("There was a problem submitting the form. Please try again or contact your advisor.");
+      document.getElementById("scoreA").textContent = sectionTotals.A;
+      document.getElementById("scoreB").textContent = sectionTotals.B;
+      document.getElementById("scoreC").textContent = sectionTotals.C;
+      document.getElementById("scoreD").textContent = sectionTotals.D;
+
+      const rawTotal = sectionTotals.A + sectionTotals.B + sectionTotals.C + sectionTotals.D;
+      document.getElementById("rawTotal").textContent = rawTotal;
+
+      let adjustment = 0;
+      document.querySelectorAll(".adjust:checked").forEach(c => {
+        adjustment += Number(c.value) || 0;
+      });
+      document.getElementById("adjustmentTotal").textContent = adjustment;
+
+      let finalScore = rawTotal + adjustment;
+      if (finalScore < 0) finalScore = 0;
+      if (finalScore > 100) finalScore = 100;
+      document.getElementById("finalScore").textContent = finalScore;
+
+      const profile = classifyRisk(finalScore);
+      document.getElementById("riskProfileDisplay").textContent = profile;
+
+      const summaryBox = document.getElementById("profileSummary");
+      const html = profileText(profile).replace(/\n/g, "<br>");
+      summaryBox.innerHTML = "<strong>" + profileText(profile).split("\\n")[0] + "</strong><br>" + html.split("<br>").slice(1).join("<br>");
     }
-  });
-});
-</script>
 
+    function buildClientSummary(caseId) {
+      const name = document.getElementById("primaryClientName").value || "";
+      const coName = document.querySelector('input[name="coClientName"]')?.value || "";
+      const date = document.querySelector('input[name="date"]')?.value || "";
+      const advisor = document.querySelector('input[name="advisor"]')?.value || "";
 
+      const scoreA = document.getElementById("scoreA").textContent;
+      const scoreB = document.getElementById("scoreB").textContent;
+      const scoreC = document.getElementById("scoreC").textContent;
+      const scoreD = document.getElementById("scoreD").textContent;
+      const rawTotal = document.getElementById("rawTotal").textContent;
+      const adj = document.getElementById("adjustmentTotal").textContent;
+      const finalScore = document.getElementById("finalScore").textContent;
+      const profile = document.getElementById("riskProfileDisplay").textContent;
+
+      let text = "";
+      text += "Risk Tolerance Questionnaire Submission (Client Copy)\\n";
+      text += "Case ID: " + caseId + "\\n";
+      text += "Primary Client: " + name + "\\n";
+      text += "Co-Client/Spouse: " + (coName || "N/A") + "\\n";
+      text += "Date: " + date + "\\n";
+      text += "Advisor: " + (advisor || "N/A") + "\\n\\n";
+
+      text += "Final Score: " + finalScore + "\\n";
+      text += "Risk Profile: " + profile + "\\n";
+      text += "Raw Total (before adjustments): " + rawTotal + "\\n";
+      text += "Adjustments: " + adj + "\\n\\n";
+
+      text += "Section Scores:\\n";
+      text += "Section A (Financial Capacity): " + scoreA + "\\n";
+      text += "Section B (Risk Tolerance): " + scoreB + "\\n";
+      text += "Section C (Experience & Knowledge): " + scoreC + "\\n";
+      text += "Section D (Behavioral Factors): " + scoreD + "\\n\\n";
+
+      text += "--- Client Questionnaire – Full Copy ---\\n";
+
+      document.querySelectorAll(".question").forEach(q => {
+        const code = q.dataset.code || "";
+        const qText = q.dataset.text || "";
+        const chosen = q.querySelector('input[type="radio"]:checked');
+        if (chosen) {
+          const answerLabel = chosen.parentElement.textContent.trim();
+          text += code + " " + qText.replace(/^\\w+\\.\\s*/, "") + "\\n";
+          text += "Answer: " + answerLabel + "\\n\\n";
+        }
+      });
+
+      const profileInfo = profileText(profile);
+      if (profileInfo) {
+        text += "Risk Profile Details:\\n" + profileInfo + "\\n";
+      }
+
+      return text;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const caseId = generateCaseId();
+      document.getElementById("caseId").value = caseId;
+      document.getElementById("caseIdDisplay").textContent = caseId;
+
+      document.querySelectorAll('input[type="radio"], .adjust').forEach(el => {
+        el.addEventListener("change", updateScores);
+      });
+      updateScores();
+
+      const form = document.getElementById("rtq-form");
+      const statusEl = document.getElementById("status");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        updateScores();
+
+        const primaryClientName = document.getElementById("primaryClientName").value.trim();
+        if (!primaryClientName) {
+          statusEl.textContent = "Please enter the Primary Client Name.";
+          statusEl.className = "status err";
+          return;
+        }
+
+        const finalScore = Number(document.getElementById("finalScore").textContent || "0");
+        const riskProfile = classifyRisk(finalScore);
+        const body = buildClientSummary(caseId);
+        const subject = `Risk Tolerance Questionnaire – ${primaryClientName} (${finalScore} – ${riskProfile})`;
+
+        const payload = {
+          subject,
+          body,
+          caseId,
+          primaryClientName,
+          finalScore,
+          riskProfile
+        };
+
+        statusEl.textContent = "Submitting...";
+        statusEl.className = "status";
+
+        try {
+          const resp = await fetch(FLOW_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if (!resp.ok) throw new Error("Network response was not OK");
+          statusEl.textContent = "Thank you! Your responses have been submitted.";
+          statusEl.className = "status ok";
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (err) {
+          console.error(err);
+          statusEl.textContent = "There was a problem submitting the form. Please contact your advisor.";
+          statusEl.className = "status err";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
