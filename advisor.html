@@ -2,144 +2,438 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Advisor Risk Questionnaire Completion</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vested Partners – Advisor Risk Questionnaire Completion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --accent: #0096a6;
+      --accent-dark: #006b76;
+      --bg: #f5f7fa;
+      --border: #d0d7e2;
+      --text: #222;
+      --muted: #555;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.5;
-      padding: 1.5rem;
-      max-width: 900px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .page {
+      max-width: 960px;
       margin: 0 auto;
-      background-color: #f7f7f7;
+      padding: 24px 16px 48px;
     }
-    h2, h3 {
-      margin-top: 1.5rem;
+    header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
     }
-    fieldset {
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      background-color: #fff;
+    header img {
+      max-height: 64px;
+      width: auto;
     }
-    legend {
-      font-weight: bold;
-      padding: 0 0.25rem;
+    header .title-block h1 {
+      font-size: 1.3rem;
+      margin: 0;
+      letter-spacing: 0.12em;
+    }
+    header .title-block p {
+      margin: 2px 0 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+    }
+    h2 {
+      margin-top: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      font-size: 1.1rem;
+    }
+    h3 {
+      margin-top: 18px;
+      font-size: 1rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 16px 18px;
+      margin-top: 12px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px 24px;
     }
     label {
+      font-size: 0.95rem;
       display: block;
-      margin: 0.25rem 0;
+      margin-bottom: 6px;
     }
-    textarea {
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
       width: 100%;
-      min-height: 80px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      margin-top: 2px;
     }
-    #clientSummary {
-      padding: 1rem;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      margin-bottom: 1rem;
-      border-radius: 4px;
+    textarea { min-height: 80px; resize: vertical; }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
     }
-    button[type="submit"] {
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border-radius: 4px;
+    .options label {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      margin-bottom: 2px;
+    }
+    .options input[type="radio"],
+    .options input[type="checkbox"] {
+      margin-top: 3px;
+    }
+    .btn-row {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    button {
+      border-radius: 999px;
       border: none;
+      padding: 10px 20px;
+      font-size: 0.95rem;
       cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
     }
+    button:hover { background: var(--accent-dark); }
+    .note { font-size: 0.8rem; color: var(--muted); }
+    .status { font-size: 0.9rem; margin-top: 8px; }
+    .status.ok { color: #1b7f3b; }
+    .status.err { color: #b00020; }
   </style>
 </head>
 <body>
-  <h2>Advisor Risk Questionnaire Completion</h2>
+  <div class="page">
+    <header>
+      <img src="VestedPartners-768x159.png" alt="Vested Partners Logo">
+      <div class="title-block">
+        <h1>ADVISOR COMPLETION</h1>
+        <p>RISK TOLERANCE QUESTIONNAIRE</p>
+      </div>
+    </header>
 
-  <div id="clientSummary">
-    <p><strong>Case ID:</strong> <span id="caseIdDisplay">Missing</span></p>
-    <p style="font-size: 0.9rem; color: #555;">
-      This advisor section is tied to the client's questionnaire using the Case ID above.
-      The full client Q&A and scoring details will be retrieved by Zapier using this ID.
-    </p>
+    <form id="advisor-form">
+      <input type="hidden" id="caseId" name="caseId" />
+
+      <h2>Advisor & Household Information</h2>
+      <div class="card grid-2">
+        <label>
+          Primary Client Name
+          <input type="text" name="primaryClientName" required />
+        </label>
+        <label>
+          Co-Client/Spouse Name
+          <input type="text" name="coClientName" />
+        </label>
+        <label>
+          Advisor Name
+          <input type="text" id="advisorName" name="advisorName" required />
+        </label>
+        <label>
+          Completion Date
+          <input type="date" id="completionDate" name="completionDate" required />
+        </label>
+        <div>
+          <span class="note"><strong>Case ID:</strong> <span id="caseIdDisplay"></span> (must match client questionnaire)</span>
+        </div>
+      </div>
+
+      <h2>Final Risk Classification & Recommendation</h2>
+      <div class="card">
+        <label>
+          Confirmed Risk Profile
+          <select id="confirmedRiskProfile" name="confirmedRiskProfile" required>
+            <option value="">Select...</option>
+            <option value="Conservative">Conservative (0–25)</option>
+            <option value="Moderate Conservative">Moderate Conservative (26–45)</option>
+            <option value="Moderate">Moderate (46–65)</option>
+            <option value="Moderate Aggressive">Moderate Aggressive (66–85)</option>
+            <option value="Aggressive">Aggressive (86–100)</option>
+          </select>
+        </label>
+
+        <label>
+          Recommended Allocation (e.g., 60% stocks / 40% bonds)
+          <input type="text" id="recommendedAllocation" name="recommendedAllocation" required />
+        </label>
+
+        <label>
+          Advisor Notes / Rationale
+          <textarea id="advisorNotes" name="advisorNotes" placeholder="Summarize key considerations, capacity vs tolerance, and portfolio rationale."></textarea>
+        </label>
+      </div>
+
+      <h2>Spouse / Partner Alignment</h2>
+      <div class="card">
+        <div class="grid-2">
+          <label>
+            Primary Client Score
+            <input type="text" name="primaryScore" />
+          </label>
+          <label>
+            Primary Client Risk Profile
+            <input type="text" name="primaryProfile" />
+          </label>
+          <label>
+            Spouse/Partner Score
+            <input type="text" name="spouseScore" />
+          </label>
+          <label>
+            Spouse/Partner Risk Profile
+            <input type="text" name="spouseProfile" />
+          </label>
+          <label>
+            Score Difference (points)
+            <input type="text" name="scoreDifference" />
+          </label>
+        </div>
+
+        <h3>Alignment Assessment</h3>
+        <div class="options">
+          <label><input type="radio" name="alignment" value="Aligned (Difference ≤ 15 points)">ALIGNED (Difference ≤ 15 points)</label>
+          <label><input type="radio" name="alignment" value="Moderate Difference (16–30 points)">MODERATE DIFFERENCE (16–30 points difference)</label>
+          <label><input type="radio" name="alignment" value="Significant Difference (>30 points)">SIGNIFICANT DIFFERENCE (>30 points difference)</label>
+        </div>
+
+        <h3>Resolution Strategy</h3>
+        <div class="options">
+          <label><input type="checkbox" name="resolution" value="Use the more conservative score">Use the more conservative score</label>
+          <label><input type="checkbox" name="resolution" value="Use the more aggressive score">Use the more aggressive score</label>
+          <label><input type="checkbox" name="resolution" value="Use the mean of the two scores">Use the mean of the two scores</label>
+          <label><input type="checkbox" name="resolution" value="Create separate allocations by account ownership">Create separate allocations by account ownership</label>
+          <label><input type="checkbox" name="resolution" value="Create his/hers allocation strategies">Create separate "his/hers" allocation strategies</label>
+          <label><input type="checkbox" name="resolution" value="Bucket approach (conservative base + aggressive growth)">Use bucket approach (conservative base + aggressive growth)</label>
+          <label><input type="checkbox" name="resolution" value="Schedule joint counseling session">Schedule joint counseling session to resolve differences</label>
+        </div>
+
+        <label>
+          Final Household Risk Score
+          <input type="text" name="finalHouseholdScore" />
+        </label>
+        <label>
+          Final Household Risk Classification
+          <input type="text" name="finalHouseholdClassification" />
+        </label>
+      </div>
+
+      <h2>Validation Questions</h2>
+      <div class="card">
+        <label>
+          Sleep Test – fill in % loss discussed:
+          <input type="text" name="sleepLossPercent" placeholder="e.g., 25%" />
+        </label>
+        <div class="options">
+          <label><input type="radio" name="sleepTest" value="Yes – would keep client awake; consider more conservative category">Yes – would keep client awake; consider more conservative category</label>
+          <label><input type="radio" name="sleepTest" value="No – score appears appropriate">No – score appears appropriate</label>
+        </div>
+
+        <h3>Behavioral Check – 2020 drawdown</h3>
+        <div class="options">
+          <label><input type="radio" name="behavioralCheck" value="Sold everything – consider more conservative approach">Sold everything – consider more conservative approach</label>
+          <label><input type="radio" name="behavioralCheck" value="Worried but held on – score likely appropriate">Worried but held on – score likely appropriate</label>
+          <label><input type="radio" name="behavioralCheck" value="Bought more – score likely appropriate or could be more aggressive">Bought more – score likely appropriate or could be more aggressive</label>
+        </div>
+      </div>
+
+      <h2>Administrator Use Only</h2>
+      <div class="card">
+        <h3>Questionnaire Completed By</h3>
+        <div class="options">
+          <label><input type="radio" name="completedBy" value="Client independently">Client independently</label>
+          <label><input type="radio" name="completedBy" value="With advisor guidance">With advisor guidance</label>
+          <label><input type="radio" name="completedBy" value="Joint completion with spouse/partner">Joint completion with spouse/partner</label>
+        </div>
+
+        <h3>Quality Indicators</h3>
+        <div class="options">
+          <label><input type="checkbox" name="quality" value="Consistent responses across similar questions">Consistent responses across similar questions</label>
+          <label><input type="checkbox" name="quality" value="Realistic return expectations">Realistic return expectations</label>
+          <label><input type="checkbox" name="quality" value="Alignment between stated goals and risk score">Alignment between stated goals and risk score</label>
+          <label><input type="checkbox" name="quality" value="Client can articulate risk tolerance in own words">Client can articulate risk tolerance in own words</label>
+        </div>
+
+        <h3>Red Flags</h3>
+        <div class="options">
+          <label><input type="checkbox" name="redFlags" value="Aggressive score but no investment experience">Aggressive score but no investment experience</label>
+          <label><input type="checkbox" name="redFlags" value="Conservative score but unrealistic return expectations">Conservative score but unrealistic return expectations</label>
+          <label><input type="checkbox" name="redFlags" value="Inconsistent responses to similar questions">Inconsistent responses to similar questions</label>
+          <label><input type="checkbox" name="redFlags" value="Spouse/partner scores differ by >30 points">Spouse/partner scores differ by >30 points</label>
+        </div>
+
+        <label>
+          Additional Notes
+          <textarea name="adminNotes"></textarea>
+        </label>
+
+        <label>
+          Next Assessment Due
+          <input type="date" name="nextAssessment" />
+        </label>
+      </div>
+
+      <h2>Signatures (Typed Acknowledgment)</h2>
+      <div class="card grid-2">
+        <label>
+          Primary Client (typed name)
+          <input type="text" name="primaryClientSignature" />
+        </label>
+        <label>
+          Date
+          <input type="date" name="primaryClientSignatureDate" />
+        </label>
+        <label>
+          Co-Client/Spouse (typed name)
+          <input type="text" name="coClientSignature" />
+        </label>
+        <label>
+          Date
+          <input type="date" name="coClientSignatureDate" />
+        </label>
+        <label>
+          Advisor (typed name)
+          <input type="text" name="advisorSignature" />
+        </label>
+        <label>
+          Date
+          <input type="date" name="advisorSignatureDate" />
+        </label>
+      </div>
+
+      <div class="btn-row">
+        <button type="submit">Submit Advisor Completion</button>
+        <span class="note">This will send a full copy of the client questionnaire and advisor completion to the designated inbox.</span>
+      </div>
+      <div id="status" class="status"></div>
+    </form>
   </div>
 
-  <form id="advisorForm">
-    <fieldset>
-      <legend>Advisor Confirmation</legend>
-      <label>
-        Confirmed Risk Profile:
-        <select name="confirmedRiskProfile" required>
-          <option value="">Select...</option>
-          <option value="Conservative">Conservative</option>
-          <option value="Moderate Conservative">Moderate Conservative</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Moderate Aggressive">Moderate Aggressive</option>
-          <option value="Aggressive">Aggressive</option>
-        </select>
-      </label>
-      <label>
-        Recommended Portfolio / Allocation:
-        <input type="text" name="recommendedAllocation" required />
-      </label>
-      <label>
-        Notes / Rationale:
-        <textarea name="advisorNotes" placeholder="Add any important context, rationale, or caveats..."></textarea>
-      </label>
-    </fieldset>
-
-    <fieldset>
-      <legend>Advisor Details</legend>
-      <label>
-        Advisor Name:
-        <input type="text" name="advisorName" required />
-      </label>
-      <label>
-        Completion Date:
-        <input type="date" name="completionDate" required />
-      </label>
-    </fieldset>
-
-    <button type="submit">Submit Advisor Completion</button>
-  </form>
-
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzcc9ys/";
+    // 🔧 CONFIG: your existing Zapier webhook URL for the advisor Zap
+    const ADVISOR_FLOW_URL = "https://hooks.zapier.com/hooks/catch/25432441/uzcc9ys/";
 
-      // Read ?caseId=... from the URL
+    function getParam(name) {
       const params = new URLSearchParams(window.location.search);
-      const caseId = params.get("caseId") || "";
+      return params.get(name) || "";
+    }
 
-      const caseIdDisplay = document.getElementById("caseIdDisplay");
-      caseIdDisplay.textContent = caseId || "Missing";
+    function gatherChecked(groupName) {
+      const inputs = document.querySelectorAll('input[name="' + groupName + '"]:checked');
+      return Array.from(inputs).map(i => i.value);
+    }
 
-      const form = document.getElementById("advisorForm");
-      if (!form) return;
+    function buildAdvisorBody(caseId) {
+      const f = document.getElementById("advisor-form");
+      const get = (name) => f.elements[name] ? f.elements[name].value || "" : "";
 
-      form.addEventListener("submit", async function (e) {
+      let text = "";
+      text += "Advisor Completion – Risk Tolerance Questionnaire\\n";
+      text += "Case ID: " + caseId + "\\n";
+      text += "Primary Client: " + get("primaryClientName") + "\\n";
+      text += "Co-Client/Spouse: " + (get("coClientName") || "N/A") + "\\n";
+      text += "Advisor: " + get("advisorName") + "\\n";
+      text += "Completion Date: " + get("completionDate") + "\\n\\n";
+
+      text += "Final Risk Classification & Recommendation\\n";
+      text += "Confirmed Risk Profile: " + get("confirmedRiskProfile") + "\\n";
+      text += "Recommended Allocation: " + get("recommendedAllocation") + "\\n";
+      text += "Advisor Notes / Rationale: " + get("advisorNotes") + "\\n\\n";
+
+      text += "Spouse/Partner Alignment\\n";
+      text += "Primary Client Score: " + get("primaryScore") + "\\n";
+      text += "Primary Client Risk Profile: " + get("primaryProfile") + "\\n";
+      text += "Spouse/Partner Score: " + get("spouseScore") + "\\n";
+      text += "Spouse/Partner Risk Profile: " + get("spouseProfile") + "\\n";
+      text += "Score Difference: " + get("scoreDifference") + "\\n";
+      const alignment = gatherChecked("alignment");
+      text += "Alignment Assessment: " + (alignment[0] || "N/A") + "\\n";
+      const resolution = gatherChecked("resolution");
+      text += "Resolution Strategy: " + (resolution.length ? resolution.join("; ") : "N/A") + "\\n";
+      text += "Final Household Risk Score: " + get("finalHouseholdScore") + "\\n";
+      text += "Final Household Risk Classification: " + get("finalHouseholdClassification") + "\\n\\n";
+
+      text += "Validation Questions\\n";
+      text += "Sleep Test Loss %: " + get("sleepLossPercent") + "\\n";
+      const sleep = gatherChecked("sleepTest");
+      text += "Sleep Test Response: " + (sleep[0] || "N/A") + "\\n";
+      const beh = gatherChecked("behavioralCheck");
+      text += "Behavioral Check Response: " + (beh[0] || "N/A") + "\\n\\n";
+
+      text += "Administrator Use Only\\n";
+      const completedBy = gatherChecked("completedBy");
+      text += "Questionnaire Completed By: " + (completedBy[0] || "N/A") + "\\n";
+      const quality = gatherChecked("quality");
+      text += "Quality Indicators: " + (quality.length ? quality.join("; ") : "None indicated") + "\\n";
+      const redFlags = gatherChecked("redFlags");
+      text += "Red Flags: " + (redFlags.length ? redFlags.join("; ") : "None indicated") + "\\n";
+      text += "Additional Notes: " + get("adminNotes") + "\\n";
+      text += "Next Assessment Due: " + get("nextAssessment") + "\\n\\n";
+
+      text += "Signatures (typed acknowledgment)\\n";
+      text += "Primary Client: " + get("primaryClientSignature") + " (Date: " + get("primaryClientSignatureDate") + ")\\n";
+      text += "Co-Client/Spouse: " + get("coClientSignature") + " (Date: " + get("coClientSignatureDate") + ")\\n";
+      text += "Advisor: " + get("advisorSignature") + " (Date: " + get("advisorSignatureDate") + ")\\n";
+
+      return text;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const caseId = getParam("caseId") || "";
+      document.getElementById("caseId").value = caseId;
+      document.getElementById("caseIdDisplay").textContent = caseId || "(missing – please confirm)";
+
+      const form = document.getElementById("advisor-form");
+      const statusEl = document.getElementById("status");
+
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const confirmedRiskProfile = form.confirmedRiskProfile.value;
-        const recommendedAllocation = form.recommendedAllocation.value;
-        const advisorNotes = form.advisorNotes.value;
-        const advisorName = form.advisorName.value;
-        const completionDate = form.completionDate.value;
+        const advisorName = document.getElementById("advisorName").value.trim();
+        const confirmedRiskProfile = document.getElementById("confirmedRiskProfile").value;
+        const recommendedAllocation = document.getElementById("recommendedAllocation").value.trim();
+        const advisorNotes = document.getElementById("advisorNotes").value.trim();
+        const completionDate = document.getElementById("completionDate").value;
 
-        const subject =
-          `Advisor Completion – Case ID: ${caseId || "Unknown"}`;
+        if (!advisorName || !confirmedRiskProfile || !recommendedAllocation || !completionDate) {
+          statusEl.textContent = "Please complete all required advisor fields.";
+          statusEl.className = "status err";
+          return;
+        }
 
-        const body =
-          `Advisor Completion for Risk Tolerance Questionnaire\n\n` +
-          `Case ID: ${caseId || "N/A"}\n\n` +
-          `Confirmed Risk Profile: ${confirmedRiskProfile}\n` +
-          `Recommended Portfolio / Allocation: ${recommendedAllocation}\n\n` +
-          `Advisor Notes:\n${advisorNotes || ""}\n\n` +
-          `Advisor: ${advisorName}\n` +
-          `Completion Date: ${completionDate}\n`;
+        const body = buildAdvisorBody(caseId);
+        const primaryClientName = form.elements["primaryClientName"].value || "";
+        const subject = `Advisor Completion – Case ID ${caseId || "N/A"} – ${primaryClientName}`;
 
         const payload = {
-          caseId,
           subject,
           body,
+          caseId,
           confirmedRiskProfile,
           recommendedAllocation,
           advisorNotes,
@@ -147,23 +441,26 @@
           completionDate
         };
 
+        statusEl.textContent = "Submitting advisor completion...";
+        statusEl.className = "status";
+
         try {
-          await fetch(FLOW_URL, {
+          const resp = await fetch(ADVISOR_FLOW_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-            mode: "no-cors"
+            body: JSON.stringify(payload)
           });
-
-          alert("Advisor completion submitted successfully.");
-          form.reset();
+          if (!resp.ok) throw new Error("Network response was not OK");
+          statusEl.textContent = "Advisor completion submitted successfully.";
+          statusEl.className = "status ok";
+          window.scrollTo({ top: 0, behavior: "smooth" });
         } catch (err) {
-          console.error("Error sending advisor completion:", err);
-          alert("There was a problem submitting the advisor completion. Please try again.");
+          console.error(err);
+          statusEl.textContent = "There was a problem submitting the advisor completion. Please try again.";
+          statusEl.className = "status err";
         }
       });
     });
   </script>
 </body>
-
 </html>
